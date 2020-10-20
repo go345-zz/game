@@ -12,8 +12,7 @@ trainData = torch.utils.data.DataLoader(datasets.MNIST('data',train=True, downlo
 
 testData = torch.utils.data.DataLoader(datasets.MNIST('data',train=False, transform=transforms.Compose([transforms.ToTensor(),transforms.Normalize((0.1307,),(0.3081,))])), batch_size=64, shuffle=True, **kwargs)
 
-if os.path.isfile('MNIST.pt'):
-    netz = torch.load('MNIST.pt')
+
 
 class Netz (nn.Module):
 	def __init__(self):
@@ -41,6 +40,8 @@ model = Netz()
 
 optimizer = optim.SGD(model.parameters(), lr=0.1, momentum=0.8)
 
+if os.path.isfile('MNIST.pt'):
+    model = torch.load('MNIST.pt')
 
 def train(epoch):
 	model.train()
@@ -63,15 +64,15 @@ def test():
 		data = Variable(data)
 		target = Variable(target)
 		out = model(data)
-		loss += F.nll_loss(out, target, size_average=False).data[0]
+		loss += F.nll_loss(out, target, size_average=False).data
 		prediction = out.data.max(1, keepdim=True)[1]
 		correct += prediction.eq(target.data.view_as(prediction)).cpu().sum()
-	loss = loss / len(testData.dataset())
+	loss = loss / len(testData.dataset)
 	print('Loss: ', loss)
-	print('Genauigkeit : ', 100. * correct/len(testData.dataset()),'%')
+	print('Genauigkeit : ', 100. * correct/len(testData.dataset),'%')
 
-for epoch in range(1, 10):
+for epoch in range(1, 1):
 	train(epoch)
 	test()
 
-torch.save(netz, 'MNIST.pt')
+torch.save(model, 'MNIST.pt')
