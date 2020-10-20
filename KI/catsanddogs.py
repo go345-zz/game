@@ -12,3 +12,6 @@ transform = transforms.Compose([
 	normalize])
 
 img=Image.open("catDog/train/cat.0.jpg")
+img_tensor = transform(img)
+img_tensor.unsqueeze_(0)
+print(img_tensor)
