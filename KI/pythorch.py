@@ -25,7 +25,7 @@ class meinNetz(nn.Module):
         return num
 
 
-#netz = meinNetz()
+netz = meinNetz()
 
 if os.path.isfile('meinNetz.pt'):
     netz = torch.load('meinNetz.pt')
