@@ -2,7 +2,7 @@ from os import listdir
 import random
 
 import torch
-from torch.nn.functional import log_softmax
+from torch.nn.functional import log_softmax, sigmoid
 import torch.optim as optim
 import torchvision
 from PIL import Image
@@ -46,6 +46,7 @@ class Netz(nn.Module):
 		self.conf1 = nn.Conv2d(3, 6, kernel_size=5)
 		self.conf2 = nn.Conv2d(6, 12, kernel_size=5)
 		self.conf3 = nn.Conv2d(12, 18, kernel_size=5)
+		self.conf4 = nn.Conv2d(18, 24, kernel_size=5)
 		self.fc1 = nn.Linear(14112, 1000)
 		self.fc2 = nn.Linear(1000, 2)
 
@@ -56,12 +57,16 @@ class Netz(nn.Module):
 		x = self.conf2(x)
 		x = F.max_pool2d(x, 2)
 		x = F.relu(x)
+		x = self.conf3
+		x = F.max_pool2d(x, 2)
+		x = F.relu(x)
+		x = self.conf4(x)
 		x = F.max_pool2d(x, 2)
 		x = F.relu(x)
 		x = x.view(-1,14112)
 		x = F.relu(self.fc1(x))
 		x = self.fc2(x)
-		return log_softmax(x)
+		return sigmoid(x)
 
 model = Netz()
 
@@ -71,17 +76,32 @@ def train(epoch):
 	model.train()
 	batch_id= 0
 	for data, target in trainData:
-		target = torch.LongTensor(target)
+		target = torch.Tensor(target)
 		data = Variable(data)
 		target = Variable(target)
 		optimizer.zero_grad()
 		out = model(data)
-		criterion = F.nll_loss
+		criterion = F.binary_cross_entropy
 		loss = criterion(out, target)
 		loss.backward()
 		optimizer.step()
 		print('epoche: ', epoch,f' [{batch_id * len(data)}/{len(trainData)}] ({100. * batch_id / len(trainData):.0f}%)',  f' \tLoss: {loss.data}')
 		batch_id = batch_id + 1
 
+
+def test():
+	model.eval()
+	files = listdir("catDog/test/")
+	f = random.choice(files)
+	img = Image.open('catDog/test/' + f)
+	img_eval_tensor = transforms(img)
+	img_eval_tensor.unsqueeze_(0)
+	data = Variable(img_eval_tensor)
+	out = model(data)
+	print(out.data.max(1, keepdim=True)[1])
+	img.show()
+	x = raw_input("> ")
+
 for epoch in range(1,30):
 	train(epoch)
+	test()
