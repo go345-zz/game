@@ -169,7 +169,7 @@ while True:
 			samen -= 5
 			stroh -= 2
 			erde -= 5
-			arbeiter -= 3
+			arbeiter -= 3		
 			forste += 1
 			siegpunkte += 1.5
 		else:
@@ -228,11 +228,10 @@ while True:
 			wolle -= 50
 			arbeiter -= 5
 			wasser -= 30
-			gold -= 25
 			minen += 1
 			siegpunkte += 4
 		else:
-			print("Dir fehlt etwas!\nDu brauchst:\n5 Eisen, 40 Stein, 150 Holz, 50 Wolle, 5 Arbeiter, 30 Wasser, 25 Gold")
+			print("Dir fehlt etwas!\nDu brauchst:\n5 Eisen, 40 Stein, 150 Holz, 50 Wolle, 5 Arbeiter, 30 Wasser")
 	elif a == "8":#Wohnhaus
 		if stein >= 50 and holz >= 100 and wolle >= 20 and wasser >= 70 and sand >= 60 and lehm >= 50:
 			stein -= 50
@@ -251,12 +250,12 @@ while True:
 			stein -= 80
 			holz -= 100
 			wolle -= 50
-			gold -= 50
+			gold -= 24
 			stroh -= 50
 			märkte += 1
 			siegpunkte += 5
 		else:
-			print("Dir fehlt etwas\nDu brauchst:\n100 Stein, 80 Holz, 50 Wolle, 60 Gold, 50 Stroh")
+			print("Dir fehlt etwas\nDu brauchst:\n100 Stein, 80 Holz, 50 Wolle, 24 Gold, 50 Stroh")
 
 	if runde == 75:
 		break
